@@ -241,7 +241,7 @@ public class S extends JFrame implements ActionListener,MouseListener {
 
             String userId = useridfild.getText().trim();
             boolean result = userId.matches("[a-zA-Z]+");
-            if (passwordfild.getText().isEmpty() && useridfild.getText().isEmpty()) {
+          if (passwordfild.getText().isEmpty() && useridfild.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Enter Username and Password", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
             else if (useridfild.getText().isEmpty()) {

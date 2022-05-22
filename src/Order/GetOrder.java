@@ -1,13 +1,11 @@
 package Order;
 
-import EMPLOYEE.Employee;
-
 import java.sql.*;
 
 public class GetOrder {
 
 
-    public Order[][] hello () throws SQLException
+    public Order[][] GetOrders() throws SQLException
     {
         try {
             DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
@@ -94,7 +92,7 @@ public class GetOrder {
     public static void main(String[] args) throws SQLException {
         GetOrder o = new GetOrder();
         Order ord [][] =null;
-        ord=o.hello();
+        ord=o.GetOrders();
         for(int i= 0 ; i<ord[0][0].arrySize ; i++)
         System.out.println("\t" + ord[i][0].serviceId + "\t" + ord[i][0].name + "\t" + ord[i][0].catagory + "\t" + ord[i][0].description + "\t" + ord[i][0].arrySize);
     }

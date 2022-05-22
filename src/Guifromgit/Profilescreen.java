@@ -105,7 +105,7 @@ public class Profilescreen<ord, size, data, arrySize> extends JFrame implements 
 	String[] column = {"Order Id","Order name","catagory","quantity","employee","price"};
 
 	GetOrder o = new GetOrder();
-	Order ord[][] = o.hello();
+	Order ord[][] = o.GetOrders();
 
 	String[][] data = getData(ord);
 

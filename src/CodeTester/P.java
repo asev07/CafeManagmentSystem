@@ -4,6 +4,9 @@ import EMPLOYEE.Employee;
 import EMPLOYEE.GetEmployeeInfo;
 import Order.GetOrder;
 import Order.Order;
+import SERVICE.GetServices;
+import SERVICE.Service;
+import SERVICE.ServiceNames;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -173,15 +176,16 @@ public class P extends JFrame implements ActionListener,MouseListener{
     R employeerightpanel=new R();
 
     String column[]= {"Order Id","Order name","catagory","quantity","employee","price"};
-
+//getting orders data fro the data base
     GetOrder o = new GetOrder();
-    Order ord[][] = o.hello();
-
+    Order ord[][] = o.GetOrders();
+    //converts the order data in to a table format
     String data[][]= getOrderData(ord);
 
 
-
-
+//gets service names from the database for the add order page
+    GetServices services = new GetServices();
+    ServiceNames sNames = services.getServices();
 
     String column2[]= {"Name","Gender","Age","Role"};
     String data2[][]= {
@@ -201,20 +205,12 @@ public class P extends JFrame implements ActionListener,MouseListener{
             {"Galleta","f" ,"44","jon"},
             {"Galleta","f" ,"44","jon"}
     };
-    String fooddata[]= {
-            "kdsn","ajdbjs","akjdnaskj"
-    };
-    String coffedata[]= {
-            "kdsn","ajdbjs","akjdnaskj"
-    };
-    String drinkdata[]= {
-            "kdsn","ajdbjs","akjdnaskj"
-    };
-    String disertdata[]= {
-            "kdsn","ajdbjs","akjdnaskj"
-    };
+    String fooddata[]= getserviceData(sNames.food);
+    String coffedata[]= getserviceData(sNames.coffee);
+    String drinkdata[]= getserviceData(sNames.drinks);
+    String disertdata[]= getserviceData(sNames.desert);
     String roles[]= {
-            "vt","asdfghjkl","1234568"
+            "Waiter","Manager","Barista","Cook","cashier"
     };
     String dates[]= {
             "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"
@@ -1066,12 +1062,13 @@ public class P extends JFrame implements ActionListener,MouseListener{
         useraddsorder.setBounds(854,33,150,20);
         useraddsorder.setVisible(false);
 
-        addstotal.setText("Sub Total");
+        addstotal.setText("Total");
         addstotal.setFont(new Font(null,Font.BOLD,13));
         addstotal.setForeground(Color.white);
         addstotal.setBounds(789,692,150,13);
         addstotal.setVisible(false);
 
+        //sub total price
         useraddstotal.setText("0");
         useraddstotal.setFont(new Font(null,Font.BOLD,13));
         useraddstotal.setForeground(lightgray);
@@ -1381,6 +1378,15 @@ public class P extends JFrame implements ActionListener,MouseListener{
             data[i][3] = String.valueOf(ord[i][0].quantity);
             data[i][4] = String.valueOf(ord[i][0].singlePrice * ord[i][0].quantity);
             data[i][5] = ord[i][0].cashierName;
+        }
+        return data;
+    }
+    private String[] getserviceData(Service[] name) {
+int x = name.length;
+        String[] data = new String [x];
+
+        for (int i = 0; i < x; i++) {
+            data[i] = name[i].name;
         }
         return data;
     }
