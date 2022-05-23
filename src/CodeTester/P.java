@@ -2,8 +2,7 @@ package CodeTester;
 
 import EMPLOYEE.Employee;
 import EMPLOYEE.GetEmployeeInfo;
-import Order.GetOrder;
-import Order.Order;
+import Order.*;
 import SERVICE.GetServices;
 import SERVICE.Service;
 import SERVICE.ServiceNames;
@@ -29,8 +28,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 public class P extends JFrame implements ActionListener,MouseListener{
+    double fp = 0, drp = 0, cp = 0, dep = 0;
+    static int id;
     JLayeredPane layer=new JLayeredPane();
 
     JPanel sidepanel=new JPanel();
@@ -290,7 +292,8 @@ public class P extends JFrame implements ActionListener,MouseListener{
         e = new Employee();
         GetEmployeeInfo getInfo = new GetEmployeeInfo();
         e = getInfo.getEmployeeInfo(loggedId);
-
+        id = loggedId;
+System.out.println(id + "is the id from the constructor");
 
         // TODO Auto-generated constructor stub
         personbutton.setIcon(personc);
@@ -452,6 +455,7 @@ public class P extends JFrame implements ActionListener,MouseListener{
         quantity1.setCaretColor(Color.white);
         quantity1.setText("1");
         quantity1.setHorizontalAlignment(JTextField.CENTER);
+        quantity1.addActionListener(this);
         quantity1.setVisible(false);
 
         quantity2.setBackground(new Color(45,48,62));
@@ -460,6 +464,7 @@ public class P extends JFrame implements ActionListener,MouseListener{
         quantity2.setCaretColor(Color.white);
         quantity2.setText("1");
         quantity2.setHorizontalAlignment(JTextField.CENTER);
+        quantity2.addActionListener(this);
         quantity2.setVisible(false);
 
         quantity3.setBackground(new Color(45,48,62));
@@ -468,6 +473,7 @@ public class P extends JFrame implements ActionListener,MouseListener{
         quantity3.setCaretColor(Color.white);
         quantity3.setText("1");
         quantity3.setHorizontalAlignment(JTextField.CENTER);
+        quantity3.addActionListener(this);
         quantity3.setVisible(false);
 
         quantity4.setBackground(new Color(45,48,62));
@@ -476,6 +482,7 @@ public class P extends JFrame implements ActionListener,MouseListener{
         quantity4.setBounds(961,560,45,45);
         quantity4.setCaretColor(Color.white);
         quantity4.setHorizontalAlignment(JTextField.CENTER);
+        quantity4.addActionListener(this);
         quantity4.setVisible(false);
 
         eaddedit.setText("Add/Edit Employe");
@@ -635,49 +642,41 @@ public class P extends JFrame implements ActionListener,MouseListener{
         aeeditemployeebutton.setFont(new Font(null,Font.PLAIN,16));
         aeeditemployeebutton.setVisible(false);
 
-        itemprice1.setText("3.5");
         itemprice1.setForeground(lightgray);
         itemprice1.setBounds(789,236,200,12);
         itemprice1.setFont(new Font(null,0,12));
         itemprice1.setVisible(false);
 
-        itemprice2.setText("2.56");
         itemprice2.setForeground(lightgray);
         itemprice2.setBounds(789,354,200,12);
         itemprice2.setFont(new Font(null,0,12));
         itemprice2.setVisible(false);
 
-        itemprice3.setText("2.88");
         itemprice3.setForeground(lightgray);
         itemprice3.setBounds(789,472,200,12);
         itemprice3.setFont(new Font(null,0,12));
         itemprice3.setVisible(false);
 
-        itemprice4.setText("2.8");
         itemprice4.setForeground(lightgray);
         itemprice4.setBounds(789,589,200,12);
         itemprice4.setFont(new Font(null,0,12));
         itemprice4.setVisible(false);
 
-        price1.setText("4.66");
         price1.setForeground(Color.white);
         price1.setBounds(1033,226,200,13);
         price1.setFont(new Font(null,0,13));
         price1.setVisible(false);
 
-        price2.setText("4.66");
         price2.setForeground(Color.white);
         price2.setBounds(1033,343,200,13);
         price2.setFont(new Font(null,0,13));
         price2.setVisible(false);
 
-        price3.setText("4.66");
         price3.setForeground(Color.white);
         price3.setBounds(1033,461,200,13);
         price3.setFont(new Font(null,0,13));
         price3.setVisible(false);
 
-        price4.setText("4.66");
         price4.setForeground(Color.white);
         price4.setBounds(1033,579,200,13);
         price4.setFont(new Font(null,0,13));
@@ -1366,6 +1365,26 @@ public class P extends JFrame implements ActionListener,MouseListener{
         this.add(layer);
     }
 
+private double getPrice(Service[] s,String name){
+        Double price = 0.0;
+        for(int i=0 ; i<s.length ; i++) {
+            if (s[i].name.equals( name ) ) {
+                price = s[i].singlePrice;
+                break;
+            }
+        }
+        return price;
+}
+
+    private void getserviceId(Order o,Service[] s,String name){
+        Double price = 0.0;
+        for(int i=0 ; i<s.length ; i++) {
+            if (s[i].name.equals( name ) ) {
+                o.serviceId = s[i].id;
+                break;
+            }
+        }
+    }
 
     private String[][] getOrderData(Order ord[][]) {
         int size = ord[0][0].arrySize;
@@ -1381,8 +1400,9 @@ public class P extends JFrame implements ActionListener,MouseListener{
         }
         return data;
     }
+
     private String[] getserviceData(Service[] name) {
-int x = name.length;
+        int x = name.length;
         String[] data = new String [x];
 
         for (int i = 0; i < x; i++) {
@@ -1770,58 +1790,232 @@ int x = name.length;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public  void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-        if (e.getSource()==personbutton) {
-            Pr();
-        }
-        if (e.getSource()==orderbutton) {
-            orderrecordscreen();
-        }
-        if(e.getSource()==addbutton) {
-            addorderscreen();
-        }
-        if(e.getSource()==employeebutton) {
-            employeescreen();
-        }
-        if(e.getSource()==exitbutton) {
-            this.dispose();
-            new S();
-        }
-        if(e.getSource()==food) {
-            choice1.setText(""+food.getSelectedItem());
-            choice1v(true);
-        }
-        if(e.getSource()==coffe) {
-            choice2.setText(""+coffe.getSelectedItem());
-            choice2v(true);
-        }
-        if(e.getSource()==drinks) {
-            choice3.setText(""+drinks.getSelectedItem());
-            choice3v(true);
-        }
-        if(e.getSource()==disert) {
-            choice4.setText(""+disert.getSelectedItem());
-            choice4v(true);
-        }
-        if(e.getSource()==addemployebutton) {
-            employeescreen();
-        }
-        if(e.getSource()==listemployeebutton) {
-            employeescreen2();
-        }
-        if(e.getSource()==removebutton1) {
-            choice1v(false);
-        }
-        if(e.getSource()==removebutton2) {
-            choice2v(false);
+        GetServices gServices = new GetServices();
+        try {
+            ServiceNames s = gServices.getServices();
+            if (e.getSource()==personbutton)
+            {
+                Pr();
+            }
+            if (e.getSource()==orderbutton)
+            {
+                orderrecordscreen();
+            }
+            if(e.getSource()==addbutton)
+            {
+                addorderscreen();
+            }
+            if(e.getSource()==employeebutton)
+            {
+                employeescreen();
+            }
+            if(e.getSource()==exitbutton)
+            {
+                this.dispose();
+                new S();
+            }
 
+            if( e.getSource() == food ) {
+                quantity1.setText("1");
+                choice1.setText("" + food.getSelectedItem());
+                choice1v(true);
+                String sfood = (String) food.getSelectedItem();
+                double price = getPrice( s.food , sfood );
+                itemprice1.setText(String.valueOf(price));
+                price1.setText(String.valueOf(Double.parseDouble(quantity1.getText()) * price));
+
+
+                fp = Double.parseDouble(price1.getText());
+
+            }
+            if(e.getSource() == quantity1) {
+             double foodPrice = getPrice(s.food, (String) food.getSelectedItem());
+                price1.setText(String.valueOf(Double.parseDouble(quantity1.getText()) * foodPrice));
+                useraddstotal.setText(String.valueOf(Double.parseDouble(useraddstotal.getText()) + Double.parseDouble(price1.getText())));
+
+                fp = Double.parseDouble(price1.getText());
+
+            }
+
+
+            if(e.getSource()==coffe) {
+                quantity2.setText("1");
+                choice2.setText(""+coffe.getSelectedItem());
+                choice2v(true);
+                String scoffee = (String) coffe.getSelectedItem();
+                double price = getPrice( s.coffee , scoffee );
+                itemprice2.setText(String.valueOf(price));
+                price2.setText(String.valueOf(Double.parseDouble(quantity2.getText()) * price));
+
+                cp = Double.parseDouble(price2.getText());
+            }
+            if(e.getSource() == quantity2) {
+                double coffeePrice = getPrice(s.coffee, (String) coffe.getSelectedItem());
+                price2.setText(String.valueOf(Double.parseDouble(quantity2.getText()) * coffeePrice));
+
+                cp = Double.parseDouble(price2.getText());
+            }
+
+
+
+
+            if(e.getSource()==drinks) {
+                quantity3.setText("1");
+                choice3.setText(""+drinks.getSelectedItem());
+                choice3v(true);
+
+                String sdrink = (String) drinks.getSelectedItem();
+                double price = getPrice( s.drinks , sdrink );
+                itemprice3.setText(String.valueOf(price));
+                price3.setText(String.valueOf(Double.parseDouble(quantity3.getText()) * price));
+                drp = Double.parseDouble(price3.getText());
+                 }
+            if(e.getSource() == quantity3) {
+                double drinkPrice = getPrice(s.drinks, (String) drinks.getSelectedItem());
+                price3.setText(String.valueOf(Double.parseDouble(quantity3.getText()) * drinkPrice));
+                System.out.println(drinkPrice + "is pric quantity is : " + quantity3.getText());
+                drp = Double.parseDouble(price3.getText());
+            }
+
+            if(e.getSource()==disert) {
+                quantity4.setText("1");
+                choice4.setText(""+disert.getSelectedItem());
+                choice4v(true);
+
+                String sdrink = (String) disert.getSelectedItem();
+                double price = getPrice( s.desert , sdrink );
+                itemprice4.setText(String.valueOf(price));
+                price4.setText(String.valueOf(Double.parseDouble(quantity4.getText()) * price));
+
+                dep = Double.parseDouble(price4.getText());
+
+            }
+            if(e.getSource() == quantity4) {
+                double drinkPrice = getPrice(s.desert, (String) disert.getSelectedItem());
+                price4.setText(String.valueOf(Double.parseDouble(quantity4.getText()) * drinkPrice));
+                System.out.println(drinkPrice + "is pric quantity is : " + quantity4.getText());
+                dep = Double.parseDouble(price4.getText());
+            }
+
+
+            if(e.getSource()==addemployebutton) {
+                employeescreen();
+            }
+            if(e.getSource()==listemployeebutton) {
+                employeescreen2();
+            }
+            if(e.getSource()==removebutton1) {
+                food.setSelectedIndex(-1);
+                choice1v(false);
+                price1.setText("0");
+
+                fp=0;
+            }
+            if(e.getSource()==removebutton2) {
+                coffe.setSelectedIndex(-1);
+                choice2v(false);
+                price2.setText("0");
+
+                cp=0;
+            }
+            if(e.getSource()==removebutton3) {
+                drinks.setSelectedIndex(-1);
+                choice3v(false);
+                price3.setText("0");
+
+                drp=0;
+            }
+            if(e.getSource()==removebutton4) {
+                disert.setSelectedIndex(-1);
+                choice4v(false);
+                price4.setText("0");
+
+                dep=0;
+            }
+            //this if else if statment calculates the total price of the selected orders
+
+            useraddstotal.setText(String.valueOf(dep + drp + cp + fp));
+
+
+            if(e.getSource() == addorderrecrdbuButton)
+            {
+
+                Order o =new Order();
+                o.employeeId = id;
+                AddNewOrder addorder = new AddNewOrder();
+                boolean success = true;
+                if(food.isVisible()) {
+
+                    System.out.println(id + " Is the id from visible food");
+
+                    o.quantity = Integer.parseInt(quantity1.getText());
+                    getserviceId(o, s.food, String.valueOf(food.getSelectedItem()));
+                    success = addorder.addOrder(o);
+                }
+                if(coffe.isVisible())
+                {
+                    System.out.println(id + " Is the id from visible coffe");
+
+                    o.quantity = Integer.parseInt(quantity2.getText());
+                    getserviceId(o, s.coffee, String.valueOf(coffe.getSelectedItem()));
+                    success = addorder.addOrder(o);
+                }
+                if(drinks.isVisible())
+                {
+
+                    o.quantity = Integer.parseInt(quantity3.getText());
+                    getserviceId(o, s.drinks, (String) drinks.getSelectedItem());
+                    System.out.println(o.serviceId + " Is the service id from visible drinks");
+                    success = addorder.addOrder(o);
+                }
+                if(disert.isVisible())
+                {
+                    System.out.println(id + " Is the id from visible disert");
+
+                    o.quantity = Integer.parseInt(quantity4.getText());
+                    getserviceId(o, s.desert, String.valueOf(disert.getSelectedItem()));
+                    System.out.println("desert order\n serviceId\tquantity\temployeeid");
+                    System.out.println(o.serviceId + " \t " + o.quantity + " \t " + o.employeeId);
+                    success = addorder.addOrder(o);
+                }
+
+                if(!success)
+                {
+                    JOptionPane.showMessageDialog(null, "Add order not successful !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, " Add order successfull.", "success", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+                if(choice1.isVisible()) {
+                    System.out.println(choice1.getText());
+                    food.setSelectedIndex(-1);
+                }
+                if(choice2.isVisible()) {
+                    System.out.println(choice2.getText());
+                    coffe.setSelectedIndex(-1);
+                }
+                if(choice3.isVisible()) {
+                    System.out.println(choice3.getText());
+                    drinks.setSelectedIndex(-1);
+                }
+                if(choice4.isVisible()) {
+                    System.out.println(choice4.getText());
+                    disert.setSelectedIndex(-1);
+                }
+                choice1v(false);
+                choice2v(false);
+                choice3v(false);
+                choice4v(false);
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        if(e.getSource()==removebutton3) {
-            choice3v(false);
-        }
-        if(e.getSource()==removebutton4) {
-            choice4v(false);
-        }
-    }}
+
+    }
+}
 

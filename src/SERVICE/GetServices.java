@@ -61,14 +61,6 @@ public class GetServices {
     //food data collected
             }
 
-            System.out.println("name \t id \t singleprice");
-            System.out.println();
-            System.out.println();
-
-            for(int i = 0 ; i < ord.arrySize ; i++)
-                System.out.println(ord.food[i].name + "\t" + ord.food[i].id + "\t" + ord.food[i].singlePrice );
-
-            System.out.println();
 
                 // getting coffee data from data base
             j = 0;
@@ -93,8 +85,6 @@ public class GetServices {
                 j+=1;
             }
             //food data collected
-            for(int i = 0 ; i < ord.arrySize ; i++)
-                System.out.println(ord.coffee[i].name + "\t" + ord.coffee[i].id + "\t" + ord.coffee[i].singlePrice );
 
             System.out.println();
 
@@ -121,10 +111,8 @@ public class GetServices {
                 j+=1;
                 //food data collected
             }
-            for(int i = 0 ; i < ord.arrySize ; i++)
-                System.out.println(ord.desert[i].name + "\t" + ord.desert[i].id + "\t" + ord.desert[i].singlePrice );
 
-            System.out.println();
+            System.out.println("from get services class");
 // getting drinks data from data base
             j = 0;
             serviceSize = getQuerySize(drinks);
@@ -147,11 +135,6 @@ public class GetServices {
                 j+=1;
                 //food data collected
             }
-            for(int i = 0 ; i < ord.arrySize ; i++)
-                System.out.println(ord.drinks[i].name + "\t" + ord.drinks[i].id + "\t" + ord.drinks[i].singlePrice );
-
-            System.out.println();
-
         } catch (SQLException e) {
             System.out.println("Error in connection to the data base !!!");
             e.printStackTrace();
@@ -172,8 +155,7 @@ public class GetServices {
         return ord;
     }
 
-
-private int getQuerySize( String name )throws SQLException {
+    private int getQuerySize( String name )throws SQLException {
     int serviceSize = 0;
     String getServiceSize = "select count(*) from ";
 

@@ -41,7 +41,7 @@ public class GetOrder {
                 for(int k = 0 ; k<1 ; k++)
                 ord[i][k] = new Order();
             }
-                ord[0][0].arrySize= orderSize;
+                Order.arrySize = orderSize;
             //String getEmpInfo_query = "select serviceId, id, quantity, employeeid, catagory, singleprice, name, description from s_order,service";
             String getEmpInfo_query = "select * from s_order,service,employee  where s_order.serviceid = service.id and s_order.employeeid = employee.id ";
             rs = statement.executeQuery(getEmpInfo_query);
@@ -89,13 +89,6 @@ public class GetOrder {
         return ord;
     }
 
-    public static void main(String[] args) throws SQLException {
-        GetOrder o = new GetOrder();
-        Order ord [][] =null;
-        ord=o.GetOrders();
-        for(int i= 0 ; i<ord[0][0].arrySize ; i++)
-        System.out.println("\t" + ord[i][0].serviceId + "\t" + ord[i][0].name + "\t" + ord[i][0].catagory + "\t" + ord[i][0].description + "\t" + ord[i][0].arrySize);
-    }
 
 
 }

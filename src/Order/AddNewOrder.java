@@ -1,24 +1,12 @@
 package Order;
 
 import java.sql.*;
-import java.util.Scanner;
 
 public class AddNewOrder {
 
-        Order getOrder()
-        {
-            Scanner s = new Scanner(System.in);
-            Order o = null;
-            System.out.println("Enter service id of customer");
-            o.serviceId = s.nextInt();
-            System.out.println("Enter qantity of order");
-            o.quantity = s.nextInt();
-            System.out.println("enter employee id");
-            o.employeeId = s.nextInt();
-            return o;
-        }
 
-    boolean addEmployee(Order o) throws SQLException
+
+    public boolean addOrder(Order o) throws SQLException
     {
         boolean success = false;
         try {
@@ -39,13 +27,14 @@ public class AddNewOrder {
 
             String add_query = "INSERT INTO S_order" + "  ( serviceid, quantity, employeeid ) VALUES " + " ( ?, ?, ? );";
 
-            statement = addConn.createStatement();
-            pS = addConn.prepareStatement(add_query);
-            pS.setInt(1, o.serviceId);
-            pS.setInt(2, o.quantity);
-            pS.setInt(3, o.employeeId);
-            pS.executeUpdate();
-            System.out.println("Add order successfull");
+    statement = addConn.createStatement();
+    pS = addConn.prepareStatement(add_query);
+    pS.setInt(1, o.serviceId);
+    pS.setInt(2, o.quantity);
+    pS.setInt(3, o.employeeId);
+    pS.executeUpdate();
+
+    System.out.println("Add order successfull");
             success = true;
             addConn.close();
         } catch (SQLException e) {
