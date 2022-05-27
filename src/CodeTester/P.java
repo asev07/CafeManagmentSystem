@@ -3,6 +3,7 @@ package CodeTester;
 import EMPLOYEE.Employee;
 import EMPLOYEE.GetEmployeeInfo;
 import Order.*;
+import ROLE.GetRole;
 import SERVICE.GetServices;
 import SERVICE.Service;
 import SERVICE.ServiceNames;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Date;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
@@ -32,7 +34,7 @@ import javax.swing.JOptionPane;
 
 public class P extends JFrame implements ActionListener,MouseListener{
     double fp = 0, drp = 0, cp = 0, dep = 0;
-    static int id;
+    static int id,tOrders;
     JLayeredPane layer=new JLayeredPane();
 
     JPanel sidepanel=new JPanel();
@@ -189,31 +191,23 @@ public class P extends JFrame implements ActionListener,MouseListener{
     GetServices services = new GetServices();
     ServiceNames sNames = services.getServices();
 
-    String column2[]= {"Name","Gender","Age","Role"};
-    String data2[][]= {
-            {"Galleta","m" ,"11","jon"},
-            {"Galleta","f" ,"12","jon"},
-            {"Galleta","m" ,"13","jon"},
-            {"Galleta","m" ,"44","jon"},
-            {"Galleta","m" ,"44","jon"},
-            {"Galleta","m" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"},
-            {"Galleta","f" ,"44","jon"}
-    };
+
+ GetEmployeeInfo getEmp = new GetEmployeeInfo();
+
+ Employee[][] emp = getEmp.GetEmployees();
+    String column2[]= {"Id","FirstName","LastName","Position","Salary","Date OF Employment"};
+    String data2[][]= getEmployeeData(emp);
+
+
+
+
     String fooddata[]= getserviceData(sNames.food);
     String coffedata[]= getserviceData(sNames.coffee);
     String drinkdata[]= getserviceData(sNames.drinks);
     String disertdata[]= getserviceData(sNames.desert);
-    String roles[]= {
-            "Waiter","Manager","Barista","Cook","cashier"
-    };
+
+    GetRole g = new GetRole();
+    String roles[]= g.GetPosition();
     String dates[]= {
             "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"
     };
@@ -497,16 +491,17 @@ System.out.println(id + "is the id from the constructor");
         employees.setBounds(459,135,250,20);
         employees.setVisible(false);
 
-        found.setText("Found");
         found.setForeground(Color.green);
         found.setFont(new Font(null,Font.PLAIN,20));
         found.setBounds(927,221,150,20);
         found.setVisible(false);
 
+
+        search.setText("Enter Id");
         search.setBackground(new Color(45,48,62));
         search.setForeground(new Color(200,205,209));
         search.setBorder(BorderFactory.createDashedBorder(new Color(54,57,70) , 1, 0));
-        search.setCaretColor(Color.white);
+        search.setCaretColor(Color.darkGray);
         search.setFont(new Font(null,0,28));
         search.setBounds(459,170,382,70);
         search.setVisible(false);
@@ -516,6 +511,7 @@ System.out.println(id + "is the id from the constructor");
         searchbutton.setBackground(Color.white);
         searchbutton.setFocusable(false);
         searchbutton.setBorder(BorderFactory.createDashedBorder(Color.white, 2, 0));
+        searchbutton.addActionListener(this);
         searchbutton.setVisible(false);
 
         efirstname.setText("First Name");
@@ -548,7 +544,7 @@ System.out.println(id + "is the id from the constructor");
         lastname.setVisible(false);
 
 
-        edateofbirth.setText("Date Of Birth");
+        edateofbirth.setText("Date Of Employment");
         edateofbirth.setForeground(Color.white);
         edateofbirth.setFont(new Font(null,Font.PLAIN,20));
         edateofbirth.setBounds(459,466,250,20);
@@ -560,8 +556,8 @@ System.out.println(id + "is the id from the constructor");
         month.setBounds(506,515,40,23);
         month.setVisible(false);
 
-        for (int i=1882;i<2005;i++) {
-            years[i-1882]=""+i;
+        for (int i=2000;i<2025;i++) {
+            years[i-2000]=""+i;
         }
         year=new JComboBox(years);
         year.setBounds(553,515,60,23);
@@ -590,7 +586,7 @@ System.out.println(id + "is the id from the constructor");
         female.setFocusable(false);
         female.setVisible(false);
 
-        erole.setText("Role");
+        erole.setText("Employee Roles");
         erole.setForeground(Color.white);
         erole.setFont(new Font(null,Font.PLAIN,20));
         erole.setBounds(459,575,250,20);
@@ -599,6 +595,8 @@ System.out.println(id + "is the id from the constructor");
         role.setBounds(459,607,345,42);
         role.setFont(new Font(null,Font.BOLD,20));
         role.setVisible(false);
+        role.setSelectedIndex(-1);
+
 
         esmallname.setText("Name");
         esmallname.setForeground(Color.white);
@@ -900,7 +898,7 @@ System.out.println(id + "is the id from the constructor");
         addstotalevenue.setBounds(151,268,300,27);
         addstotalevenue.setVisible(false);
 
-        useraddstotalorder.setText("800");
+
         useraddstotalorder.setForeground(Color.white);
         useraddstotalorder.setFont(new Font(null,Font.BOLD,27));
         useraddstotalorder.setBounds(469,234,300,27);
@@ -1049,13 +1047,13 @@ System.out.println(id + "is the id from the constructor");
         addsprice.setBounds(1033,146,150,13);
         addsprice.setVisible(false);
 
-        order.setText("Order");
+        order.setText("Ordered");
         order.setFont(new Font(null,Font.BOLD,20));
-        order.setForeground(Color.white);
+        order.setForeground(lightgray);
         order.setBounds(789,33,150,20);
         order.setVisible(false);
 
-        useraddsorder.setText("#34562");
+        useraddsorder.setText("   Services list");
         useraddsorder.setFont(new Font(null,Font.BOLD,20));
         useraddsorder.setForeground(lightgray);
         useraddsorder.setBounds(854,33,150,20);
@@ -1364,6 +1362,14 @@ System.out.println(id + "is the id from the constructor");
         this.setTitle("Cafe Managment System");
         this.add(layer);
     }
+    public static boolean isNumeric(String str)
+    {
+        for (char c : str.toCharArray())
+        {
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
+    }
 
 private double getPrice(Service[] s,String name){
         Double price = 0.0;
@@ -1397,6 +1403,20 @@ private double getPrice(Service[] s,String name){
             data[i][3] = String.valueOf(ord[i][0].quantity);
             data[i][4] = String.valueOf(ord[i][0].singlePrice * ord[i][0].quantity);
             data[i][5] = ord[i][0].cashierName;
+        }
+        return data;
+    }
+    private String[][] getEmployeeData(Employee[][] ord) {
+
+        String[][] data = new String [ord.length][6];
+
+        for (int i = 0; i < ord.length ; i++) {
+            data[i][0] = String.valueOf(ord[i][0].id);
+            data[i][1] = ord[i][0].firstName;
+            data[i][2] = ord[i][0].lastName;
+            data[i][3] = String.valueOf(ord[i][0].position);
+            data[i][4] = String.valueOf(ord[i][0].salary);
+            data[i][5] = ord[i][0].date;
         }
         return data;
     }
@@ -1566,7 +1586,7 @@ private double getPrice(Service[] s,String name){
         erole.setVisible(x);
         role.setVisible(x);
         aeaddemployebutton.setVisible(x);
-        aeeditemployeebutton.setVisible(x);
+       // aeeditemployeebutton.setVisible(x);
         addemployebutton.setContentAreaFilled(x);
         addemployebutton.setVisible(x);
         addemployebutton.setForeground(lightred);
@@ -1586,6 +1606,8 @@ private double getPrice(Service[] s,String name){
             employeeclickedbackground.setBackground(lightred);
         }
     }
+
+    //display all employee
     void es2visible(boolean x) {
 
         if(x==true&& employeeclickedbackground.isVisible()==true) {
@@ -1722,6 +1744,8 @@ private double getPrice(Service[] s,String name){
         // TODO Auto-generated method stub
 
     }
+
+
     @Override
     public void mouseEntered(MouseEvent e) {
         // TODO Auto-generated method stub
@@ -1756,6 +1780,7 @@ private double getPrice(Service[] s,String name){
         if (e.getSource()==removebutton4) {
             removebutton4.setIcon(removeimgh);
         }
+
     }
     @Override
     public void mouseExited(MouseEvent e) {
@@ -1795,34 +1820,29 @@ private double getPrice(Service[] s,String name){
         GetServices gServices = new GetServices();
         try {
             ServiceNames s = gServices.getServices();
-            if (e.getSource()==personbutton)
-            {
+            if (e.getSource() == personbutton) {
                 Pr();
             }
-            if (e.getSource()==orderbutton)
-            {
+            if (e.getSource() == orderbutton) {
                 orderrecordscreen();
             }
-            if(e.getSource()==addbutton)
-            {
+            if (e.getSource() == addbutton) {
                 addorderscreen();
             }
-            if(e.getSource()==employeebutton)
-            {
+            if (e.getSource() == employeebutton) {
                 employeescreen();
             }
-            if(e.getSource()==exitbutton)
-            {
+            if (e.getSource() == exitbutton) {
                 this.dispose();
                 new S();
             }
 
-            if( e.getSource() == food ) {
+            if (e.getSource() == food) {
                 quantity1.setText("1");
                 choice1.setText("" + food.getSelectedItem());
                 choice1v(true);
                 String sfood = (String) food.getSelectedItem();
-                double price = getPrice( s.food , sfood );
+                double price = getPrice(s.food, sfood);
                 itemprice1.setText(String.valueOf(price));
                 price1.setText(String.valueOf(Double.parseDouble(quantity1.getText()) * price));
 
@@ -1830,8 +1850,8 @@ private double getPrice(Service[] s,String name){
                 fp = Double.parseDouble(price1.getText());
 
             }
-            if(e.getSource() == quantity1) {
-             double foodPrice = getPrice(s.food, (String) food.getSelectedItem());
+            if (e.getSource() == quantity1) {
+                double foodPrice = getPrice(s.food, (String) food.getSelectedItem());
                 price1.setText(String.valueOf(Double.parseDouble(quantity1.getText()) * foodPrice));
                 useraddstotal.setText(String.valueOf(Double.parseDouble(useraddstotal.getText()) + Double.parseDouble(price1.getText())));
 
@@ -1840,18 +1860,18 @@ private double getPrice(Service[] s,String name){
             }
 
 
-            if(e.getSource()==coffe) {
+            if (e.getSource() == coffe) {
                 quantity2.setText("1");
-                choice2.setText(""+coffe.getSelectedItem());
+                choice2.setText("" + coffe.getSelectedItem());
                 choice2v(true);
                 String scoffee = (String) coffe.getSelectedItem();
-                double price = getPrice( s.coffee , scoffee );
+                double price = getPrice(s.coffee, scoffee);
                 itemprice2.setText(String.valueOf(price));
                 price2.setText(String.valueOf(Double.parseDouble(quantity2.getText()) * price));
 
                 cp = Double.parseDouble(price2.getText());
             }
-            if(e.getSource() == quantity2) {
+            if (e.getSource() == quantity2) {
                 double coffeePrice = getPrice(s.coffee, (String) coffe.getSelectedItem());
                 price2.setText(String.valueOf(Double.parseDouble(quantity2.getText()) * coffeePrice));
 
@@ -1859,40 +1879,38 @@ private double getPrice(Service[] s,String name){
             }
 
 
-
-
-            if(e.getSource()==drinks) {
+            if (e.getSource() == drinks) {
                 quantity3.setText("1");
-                choice3.setText(""+drinks.getSelectedItem());
+                choice3.setText("" + drinks.getSelectedItem());
                 choice3v(true);
 
                 String sdrink = (String) drinks.getSelectedItem();
-                double price = getPrice( s.drinks , sdrink );
+                double price = getPrice(s.drinks, sdrink);
                 itemprice3.setText(String.valueOf(price));
                 price3.setText(String.valueOf(Double.parseDouble(quantity3.getText()) * price));
                 drp = Double.parseDouble(price3.getText());
-                 }
-            if(e.getSource() == quantity3) {
+            }
+            if (e.getSource() == quantity3) {
                 double drinkPrice = getPrice(s.drinks, (String) drinks.getSelectedItem());
                 price3.setText(String.valueOf(Double.parseDouble(quantity3.getText()) * drinkPrice));
                 System.out.println(drinkPrice + "is pric quantity is : " + quantity3.getText());
                 drp = Double.parseDouble(price3.getText());
             }
 
-            if(e.getSource()==disert) {
+            if (e.getSource() == disert) {
                 quantity4.setText("1");
-                choice4.setText(""+disert.getSelectedItem());
+                choice4.setText("" + disert.getSelectedItem());
                 choice4v(true);
 
                 String sdrink = (String) disert.getSelectedItem();
-                double price = getPrice( s.desert , sdrink );
+                double price = getPrice(s.desert, sdrink);
                 itemprice4.setText(String.valueOf(price));
                 price4.setText(String.valueOf(Double.parseDouble(quantity4.getText()) * price));
 
                 dep = Double.parseDouble(price4.getText());
 
             }
-            if(e.getSource() == quantity4) {
+            if (e.getSource() == quantity4) {
                 double drinkPrice = getPrice(s.desert, (String) disert.getSelectedItem());
                 price4.setText(String.valueOf(Double.parseDouble(quantity4.getText()) * drinkPrice));
                 System.out.println(drinkPrice + "is pric quantity is : " + quantity4.getText());
@@ -1900,109 +1918,109 @@ private double getPrice(Service[] s,String name){
             }
 
 
-            if(e.getSource()==addemployebutton) {
+            if (e.getSource() == addemployebutton) {
                 employeescreen();
             }
-            if(e.getSource()==listemployeebutton) {
+            if (e.getSource() == listemployeebutton) {
                 employeescreen2();
             }
-            if(e.getSource()==removebutton1) {
+            if (e.getSource() == removebutton1) {
                 food.setSelectedIndex(-1);
                 choice1v(false);
                 price1.setText("0");
 
-                fp=0;
+                fp = 0;
             }
-            if(e.getSource()==removebutton2) {
+            if (e.getSource() == removebutton2) {
                 coffe.setSelectedIndex(-1);
                 choice2v(false);
                 price2.setText("0");
 
-                cp=0;
+                cp = 0;
             }
-            if(e.getSource()==removebutton3) {
+            if (e.getSource() == removebutton3) {
                 drinks.setSelectedIndex(-1);
                 choice3v(false);
                 price3.setText("0");
 
-                drp=0;
+                drp = 0;
             }
-            if(e.getSource()==removebutton4) {
+            if (e.getSource() == removebutton4) {
                 disert.setSelectedIndex(-1);
                 choice4v(false);
                 price4.setText("0");
 
-                dep=0;
+                dep = 0;
             }
             //this if else if statment calculates the total price of the selected orders
 
             useraddstotal.setText(String.valueOf(dep + drp + cp + fp));
 
 
-            if(e.getSource() == addorderrecrdbuButton)
-            {
+            if (e.getSource() == addorderrecrdbuButton) {
+                Order o = new Order();
 
-                Order o =new Order();
                 o.employeeId = id;
                 AddNewOrder addorder = new AddNewOrder();
                 boolean success = true;
-                if(food.isVisible()) {
+                if (food.isVisible()) {
 
                     System.out.println(id + " Is the id from visible food");
 
                     o.quantity = Integer.parseInt(quantity1.getText());
                     getserviceId(o, s.food, String.valueOf(food.getSelectedItem()));
                     success = addorder.addOrder(o);
+
+                    tOrders += 1;
                 }
-                if(coffe.isVisible())
-                {
+                if (coffe.isVisible()) {
                     System.out.println(id + " Is the id from visible coffe");
+
 
                     o.quantity = Integer.parseInt(quantity2.getText());
                     getserviceId(o, s.coffee, String.valueOf(coffe.getSelectedItem()));
                     success = addorder.addOrder(o);
+
+                    tOrders += 1;
                 }
-                if(drinks.isVisible())
-                {
+                if (drinks.isVisible()) {
 
                     o.quantity = Integer.parseInt(quantity3.getText());
                     getserviceId(o, s.drinks, (String) drinks.getSelectedItem());
                     System.out.println(o.serviceId + " Is the service id from visible drinks");
                     success = addorder.addOrder(o);
+
+                    tOrders += 1;
                 }
-                if(disert.isVisible())
-                {
+                if (disert.isVisible()) {
                     System.out.println(id + " Is the id from visible disert");
 
                     o.quantity = Integer.parseInt(quantity4.getText());
                     getserviceId(o, s.desert, String.valueOf(disert.getSelectedItem()));
-                    System.out.println("desert order\n serviceId\tquantity\temployeeid");
-                    System.out.println(o.serviceId + " \t " + o.quantity + " \t " + o.employeeId);
                     success = addorder.addOrder(o);
-                }
 
-                if(!success)
-                {
-                    JOptionPane.showMessageDialog(null, "Add order not successful !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    tOrders += 1;
                 }
-                else
-                {
+                useraddstotalorder.setText(String.valueOf(tOrders));
+                if (!success) {
+                    JOptionPane.showMessageDialog(null, "Add order not successful !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                } else {
                     JOptionPane.showMessageDialog(null, " Add order successfull.", "success", JOptionPane.INFORMATION_MESSAGE);
                 }
 
-                if(choice1.isVisible()) {
+                if (choice1.isVisible()) {
                     System.out.println(choice1.getText());
                     food.setSelectedIndex(-1);
                 }
-                if(choice2.isVisible()) {
+                if (choice2.isVisible()) {
                     System.out.println(choice2.getText());
                     coffe.setSelectedIndex(-1);
                 }
-                if(choice3.isVisible()) {
+                if (choice3.isVisible()) {
                     System.out.println(choice3.getText());
                     drinks.setSelectedIndex(-1);
                 }
-                if(choice4.isVisible()) {
+                if (choice4.isVisible()) {
                     System.out.println(choice4.getText());
                     disert.setSelectedIndex(-1);
                 }
@@ -2015,7 +2033,77 @@ private double getPrice(Service[] s,String name){
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+//add/edit page
+        GetEmployeeInfo ge = new GetEmployeeInfo();
+Employee emp=new Employee();
+        if (e.getSource() == searchbutton) {
+            //setting fields to default value
+            role.setSelectedIndex(-1);
+            firstname.setText(" ");
+            lastname.setText(" ");
+            day.setSelectedIndex(-1);
+            month.setSelectedIndex(-1);
+            year.setSelectedIndex(-1);
+            String searchbox = search.getText();
+            System.out.println("the search box contains " + searchbox);
+            if (isNumeric(searchbox)) {
+                try {
+                    int id = Integer.parseInt(search.getText());
 
+                    boolean success = ge.getEmployeeInfo(emp,id);
+                 if(success) {
+                     found.setText("found");
+                     aeeditemployeebutton.setVisible(true);
+                     found.setForeground(Color.green);
+
+                     firstname.setText(emp.firstName);
+                     lastname.setText(emp.lastName);
+                     if(emp.gender == "MALE") {
+                         female.setSelected(false);
+                     }
+                     else if(emp.gender == "FEMALE"){
+                         female.setSelected(true);
+                     }
+
+                     String d,m,y;
+                     emp.date.trim();
+                     d = "" + emp.date.charAt(8) + "" + emp.date.charAt(9);
+                     m = "" + emp.date.charAt(5) + "" + emp.date.charAt(6);
+                     y = "" + emp.date.charAt(0) + "" + emp.date.charAt(1) + "" + emp.date.charAt(2) + "" + emp.date.charAt(3);
+
+                     role.setSelectedItem(emp.position);
+                     day.setSelectedItem(d);
+                month.setSelectedItem(m);
+                year.setSelectedItem(y);
+                 }
+                 else {
+                     aeeditemployeebutton.setVisible(false);
+                     found.setText("not found");
+                     found.setForeground(Color.red);
+                     search.setText("");
+
+                 }
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        else {
+                if (search.getText().isEmpty() ) {
+                    found.setText(" ");
+                    JOptionPane.showMessageDialog(null, "Empty text please Enter Id !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                    found.setText(" ");
+                    JOptionPane.showMessageDialog(null, "Please Enter correct \n Employee Id contains numbers only !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+        }
+
+
+
+        }
     }
 }
+
 

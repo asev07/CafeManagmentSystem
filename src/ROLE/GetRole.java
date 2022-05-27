@@ -1,17 +1,15 @@
-package Order;
+package ROLE;
+
+import EMPLOYEE.Employee;
+import Order.Order;
 
 import java.sql.*;
 
-public class AddNewOrder {
-
-
-
-    public boolean addOrder(Order o) throws SQLException
+public class GetRole {
+    public String[] GetPosition() throws SQLException
     {
-        boolean success = false;
         try {
             DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
-
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
@@ -20,24 +18,43 @@ public class AddNewOrder {
         Connection addConn = null;
         Statement statement = null;
         PreparedStatement pS = null;
-        try {
+        Role r[] = null;
+        String[] s = null;
 
+        try {
             addConn = DriverManager.getConnection(url);
             System.out.println("connected to the data base : " + addConn.getCatalog());
             //getting customer data from getCustomer function
+            statement = addConn.createStatement();
+            ResultSet rs ;
 
-            String add_query = "INSERT INTO S_order" + "  ( serviceid, quantity, employeeid ) VALUES " + " ( ?, ?, ? );";
 
-    statement = addConn.createStatement();
-    pS = addConn.prepareStatement(add_query);
-    pS.setInt(1, o.serviceId);
-    pS.setInt(2, o.quantity);
-    pS.setInt(3, o.employeeId);
-    pS.executeUpdate();
 
-    System.out.println("Add order successfull");
-            success = true;
-            addConn.close();
+            String getOrderSize = "select count(*) from Role ";
+            int orderSize = 0 , j=0;
+
+            rs = statement.executeQuery(getOrderSize);
+            while (rs.next()) {
+                orderSize = rs.getInt(1);
+            }
+            s = new String[orderSize];
+            String getEmpInfo_query = "select position from role ";
+            rs = statement.executeQuery(getEmpInfo_query);
+
+            while (rs.next()) {
+
+
+                s[j] = rs.getString("position");
+
+                j+=1;
+
+            }
+            for (String o : s) {
+
+                System.out.println(o);
+            }
+
+
         } catch (SQLException e) {
             System.out.println("Error in connection to the data base !!!");
             e.printStackTrace();
@@ -61,9 +78,8 @@ public class AddNewOrder {
                 System.out.println("successfully closed the connection");
             else
                 System.out.println("connection not closed");
-
-            return success;
         }
+        return s;
     }
 
 
