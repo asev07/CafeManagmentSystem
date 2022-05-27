@@ -221,6 +221,7 @@ String date = "no date";
         emp.contratType = rs.getString("contrat_type");
         emp.roleId = rs.getInt("role_id");
         emp.date = String.valueOf(rs.getDate("date_of_employment"));
+        emp.password = rs.getString("password");
 
     }
 

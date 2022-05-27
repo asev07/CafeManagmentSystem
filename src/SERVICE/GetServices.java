@@ -11,6 +11,52 @@ public class GetServices {
    private PreparedStatement pS = null;
    private ServiceNames ord = null;
    private   ResultSet rs ;
+   public int getServiceId(String n) throws SQLException {
+      int id = 0;
+       try {
+           DriverManager.registerDriver(new SQLServerDriver());
+       } catch (SQLException e1) {
+           e1.printStackTrace();
+       }
+
+       try {
+
+           ord = new ServiceNames();
+           String url = "jdbc:sqlserver://DESKTOP-LPP4R31:1433;database=cafe;integratedSecurity=true;encrypt=false";
+           addConn = DriverManager.getConnection(url);
+
+           statement = addConn.createStatement();
+
+           String getEmpInfo_query = "select id from role  where position ='" + n + "'";
+           rs = statement.executeQuery(getEmpInfo_query);
+
+           while (rs.next()) {
+               id = rs.getInt("id");
+               //food data collected
+           }
+       }catch (SQLException e) {
+           System.out.println("Error in connection to the data base !!!");
+           e.printStackTrace();
+       } finally {
+
+           if (addConn != null) {
+               try {
+                   addConn.close();
+               } catch (SQLException e) {
+                   System.out.println("cannot close the connection to the data base");
+               }
+           }
+           if (addConn.isClosed())
+               System.out.println("successfully closed the connection");
+           else
+               System.out.println("connection not closed");
+       }
+       return id;
+   }
+
+
+
+
     public ServiceNames getServices() throws SQLException
     {
         try {

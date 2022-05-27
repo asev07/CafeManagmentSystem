@@ -13,5 +13,6 @@ public class Employee extends Role {
     public String contratType;
     public String date;
     public int roleId=1;
+    public String password;
 }
 

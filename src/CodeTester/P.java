@@ -1,7 +1,9 @@
 package CodeTester;
 
+import EMPLOYEE.AddNewEmployee;
 import EMPLOYEE.Employee;
 import EMPLOYEE.GetEmployeeInfo;
+import EMPLOYEE.UpdateEmployee;
 import Order.*;
 import ROLE.GetRole;
 import SERVICE.GetServices;
@@ -14,8 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -33,6 +37,7 @@ import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
 public class P extends JFrame implements ActionListener,MouseListener{
+    private static int foundId = 0;
     double fp = 0, drp = 0, cp = 0, dep = 0;
     static int id,tOrders;
     JLayeredPane layer=new JLayeredPane();
@@ -58,8 +63,11 @@ public class P extends JFrame implements ActionListener,MouseListener{
     JLabel employees=new JLabel();
     JLabel found=new JLabel();
     JLabel efirstname=new JLabel();
+    JLabel password=new JLabel();
     JLabel elastname=new JLabel();
+    JLabel cpassword=new JLabel();
     JLabel egender=new JLabel();
+    JLabel employeeAge=new JLabel();
     JLabel erole=new JLabel();
     JLabel edateofbirth=new JLabel();
     JLabel esmallname=new JLabel();
@@ -208,8 +216,15 @@ public class P extends JFrame implements ActionListener,MouseListener{
 
     GetRole g = new GetRole();
     String roles[]= g.GetPosition();
+    String age[] = {  "01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20",
+
+                      "21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40",
+                      "41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60",
+                      "61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80",
+                      "81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100"};
+
     String dates[]= {
-            "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"
+            "01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"
     };
     String monthes[]= {
             "01","02","03","04","05","06","07","08","09","10","11","12"
@@ -234,12 +249,17 @@ public class P extends JFrame implements ActionListener,MouseListener{
     JTextField quantity4=new JTextField();
 
     JTextField firstname=new JTextField();
+    JTextField passwordField = new JTextField();
+    JTextField cpasswordField = new JTextField();
     JTextField lastname=new JTextField();
     JTextField search=new JTextField();
 
     JRadioButton male= new JRadioButton("Male");
     JRadioButton female = new JRadioButton("Female");
     ButtonGroup group=new ButtonGroup();
+
+
+    JComboBox ageGet=new JComboBox(age);
 
     JComboBox day=new JComboBox(dates);
     JComboBox month=new JComboBox(monthes);
@@ -520,13 +540,35 @@ System.out.println(id + "is the id from the constructor");
         efirstname.setBounds(459,271,250,20);
         efirstname.setVisible(false);
 
+        password.setText("Password");
+        password.setForeground(Color.white);
+        password.setFont(new Font(null,Font.PLAIN,20));
+        password.setBounds(750,271,250,20);
+        password.setVisible(false);
+
         firstname.setBackground(new Color(45,48,62));
         firstname.setForeground(new Color(200,205,209));
         firstname.setBorder(BorderFactory.createDashedBorder(new Color(54,57,70) , 1, 0));
         firstname.setCaretColor(Color.white);
         firstname.setFont(new Font(null,0,23));
-        firstname.setBounds(459,301,345,42);
+        firstname.setBounds(459,301,245,42);
         firstname.setVisible(false);
+
+        passwordField.setBackground(new Color(45,48,62));
+        passwordField.setForeground(new Color(200,205,209));
+        passwordField.setBorder(BorderFactory.createDashedBorder(new Color(54,57,70) , 1, 0));
+        passwordField.setCaretColor(Color.white);
+        passwordField.setFont(new Font(null,0,23));
+        passwordField.setBounds(750,301,245,42);
+        passwordField.setVisible(false);
+
+        cpasswordField.setBackground(new Color(45,48,62));
+        cpasswordField.setForeground(new Color(200,205,209));
+        cpasswordField.setBorder(BorderFactory.createDashedBorder(new Color(54,57,70) , 1, 0));
+        cpasswordField.setCaretColor(Color.white);
+        cpasswordField.setFont(new Font(null,0,23));
+        cpasswordField.setBounds(750,397,245,42);
+        cpasswordField.setVisible(false);
 
         elastname.setText("Last Name");
         elastname.setForeground(Color.white);
@@ -534,13 +576,19 @@ System.out.println(id + "is the id from the constructor");
         elastname.setBounds(459,362,250,20);
         elastname.setVisible(false);
 
+        cpassword.setText("Confirm Password");
+        cpassword.setForeground(Color.white);
+        cpassword.setFont(new Font(null,Font.PLAIN,20));
+        cpassword.setBounds(750,362,250,20);
+        cpassword.setVisible(false);
+
 
         lastname.setBackground(new Color(45,48,62));
         lastname.setForeground(new Color(200,205,209));
         lastname.setBorder(BorderFactory.createDashedBorder(new Color(54,57,70) , 1, 0));
         lastname.setCaretColor(Color.white);
         lastname.setFont(new Font(null,0,23));
-        lastname.setBounds(459,397,345,42);
+        lastname.setBounds(459,397,245,42);
         lastname.setVisible(false);
 
 
@@ -569,8 +617,12 @@ System.out.println(id + "is the id from the constructor");
         egender.setBounds(674,466,250,20);
         egender.setVisible(false);
 
-        group.add(male);
-        group.add(female);
+        employeeAge.setText("Age");
+        employeeAge.setForeground(Color.white);
+        employeeAge.setFont(new Font(null,Font.PLAIN,20));
+        employeeAge.setBounds(850,466,250,25);
+        employeeAge.setVisible(false);
+
 
         male.setBounds(672,490,200,80);
         male.setContentAreaFilled(false);
@@ -578,6 +630,8 @@ System.out.println(id + "is the id from the constructor");
         male.setForeground(Color.white);
         male.setFocusable(false);
         male.setVisible(false);
+        male.setActionCommand("M");
+
 
         female.setBounds(739,490,200,80);
         female.setContentAreaFilled(false);
@@ -585,6 +639,12 @@ System.out.println(id + "is the id from the constructor");
         female.setForeground(Color.white);
         female.setFocusable(false);
         female.setVisible(false);
+        female.setActionCommand("F");
+
+
+        group.add(female);
+        group.add(male);
+
 
         erole.setText("Employee Roles");
         erole.setForeground(Color.white);
@@ -592,10 +652,16 @@ System.out.println(id + "is the id from the constructor");
         erole.setBounds(459,575,250,20);
         erole.setVisible(false);
 
-        role.setBounds(459,607,345,42);
+        role.setBounds(459,607,245,42);
         role.setFont(new Font(null,Font.BOLD,20));
         role.setVisible(false);
+        role.addActionListener(this);
         role.setSelectedIndex(-1);
+
+        ageGet.setBounds(850,515,50,23);
+        ageGet.setVisible(false);
+        ageGet.setSelectedIndex(-1);
+
 
 
         esmallname.setText("Name");
@@ -630,15 +696,17 @@ System.out.println(id + "is the id from the constructor");
         aeaddemployebutton.setContentAreaFilled(false);
         aeaddemployebutton.setFont(new Font(null,Font.PLAIN,16));
         aeaddemployebutton.setVisible(false);
+        aeaddemployebutton.addActionListener(this);
 
+        aeeditemployeebutton.setText("Edit Employee");
         aeeditemployeebutton.setBounds(631,679,165,47);
         aeeditemployeebutton.setForeground(lightred);
         aeeditemployeebutton.setFocusable(false);
         aeeditemployeebutton.setBorder(BorderFactory.createDashedBorder(lightred, 2, 0));
-        aeeditemployeebutton.setText("Edit Employee");
         aeeditemployeebutton.setContentAreaFilled(false);
         aeeditemployeebutton.setFont(new Font(null,Font.PLAIN,16));
         aeeditemployeebutton.setVisible(false);
+        aeeditemployeebutton.addActionListener(this);
 
         itemprice1.setForeground(lightgray);
         itemprice1.setBounds(789,236,200,12);
@@ -1327,21 +1395,27 @@ System.out.println(id + "is the id from the constructor");
         layer.add(esmallgender);
         layer.add(esmallname);
         layer.add(role);
+        layer.add(ageGet);
         layer.add(erole);
         layer.add(female);
         layer.add(male);
         layer.add(egender);
+        layer.add(employeeAge);
         layer.add(year);
         layer.add(month);
         layer.add(day);
         layer.add(edateofbirth);
         layer.add(elastname);
+        layer.add(cpassword);
         layer.add(efirstname);
+        layer.add(password);
         layer.add(found);
         layer.add(employees);
         layer.add(eaddedit);
         layer.add(lastname);
         layer.add(firstname);
+        layer.add(cpasswordField);
+        layer.add(passwordField);
         layer.add(searchbutton);
         layer.add(search);
         layer.add(listemployeebutton);
@@ -1362,7 +1436,7 @@ System.out.println(id + "is the id from the constructor");
         this.setTitle("Cafe Managment System");
         this.add(layer);
     }
-    public static boolean isNumeric(String str)
+    private static boolean isNumeric(String str)
     {
         for (char c : str.toCharArray())
         {
@@ -1370,6 +1444,17 @@ System.out.println(id + "is the id from the constructor");
         }
         return true;
     }
+    private static boolean isSlphabeticOnly(String a){
+        boolean validity=true;
+        for(int i=0 ; i<a.length() ; i++){
+            if( Character.isDigit( a.charAt(i) ) ){
+        validity = false;
+        break;
+            }
+        }
+        return validity;
+    }
+
 
 private double getPrice(Service[] s,String name){
         Double price = 0.0;
@@ -1556,10 +1641,12 @@ private double getPrice(Service[] s,String name){
         addssplit.setVisible(x);
         addordertitle.setVisible(x);
         if(x==false) {
+
             addbutton.setIcon(addo);
             allchoicev();
 
         }else {
+            aeeditemployeebutton.setVisible(false);
             addbutton.setIcon(addoc);
             addclickedbackground.setBackground(lightred);
         }
@@ -1581,10 +1668,12 @@ private double getPrice(Service[] s,String name){
         month.setVisible(x);
         year.setVisible(x);
         egender.setVisible(x);
+        employeeAge.setVisible(x);
         male.setVisible(x);
         female.setVisible(x);
         erole.setVisible(x);
         role.setVisible(x);
+        ageGet.setVisible(x);
         aeaddemployebutton.setVisible(x);
        // aeeditemployeebutton.setVisible(x);
         addemployebutton.setContentAreaFilled(x);
@@ -1623,18 +1712,24 @@ private double getPrice(Service[] s,String name){
             search.setVisible(!x);
             searchbutton.setVisible(!x);
             efirstname.setVisible(!x);
+            password.setVisible(!x);
             firstname.setVisible(!x);
+            cpasswordField.setVisible(!x);
+            passwordField.setVisible(!x);
             elastname.setVisible(!x);
+            cpassword.setVisible(!x);
             lastname.setVisible(!x);
             edateofbirth.setVisible(!x);
             day.setVisible(!x);
             month.setVisible(!x);
             year.setVisible(!x);
             egender.setVisible(!x);
+            employeeAge.setVisible(!x);
             male.setVisible(!x);
             female.setVisible(!x);
             erole.setVisible(!x);
             role.setVisible(!x);
+            ageGet.setVisible(!x);
             aeaddemployebutton.setVisible(!x);
             aeeditemployeebutton.setVisible(!x);
             addemployebutton.setContentAreaFilled(!x);
@@ -1827,11 +1922,20 @@ private double getPrice(Service[] s,String name){
                 orderrecordscreen();
             }
             if (e.getSource() == addbutton) {
-                addorderscreen();
+                    addorderscreen();
             }
             if (e.getSource() == employeebutton) {
-                employeescreen();
+                    Employee emp ;
+                    GetEmployeeInfo eI = new GetEmployeeInfo();
+
+                    emp = eI.getEmployeeInfo(id);
+
+                    if(emp.position.equals("Manager"))
+                        employeescreen();else
+                        JOptionPane.showMessageDialog(null, "login with a manager account to access this page.", "Access denied", JOptionPane.INFORMATION_MESSAGE);
+
             }
+
             if (e.getSource() == exitbutton) {
                 this.dispose();
                 new S();
@@ -2033,10 +2137,36 @@ private double getPrice(Service[] s,String name){
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+
 //add/edit page
+
+        if(e.getSource() == role){
+            String choice = (String) role.getSelectedItem();
+            if(choice!=null){
+                if( choice.equals("Cashier") || choice.equals("Manager") )
+                {
+                    password.setVisible(true);
+                    passwordField.setVisible(true);
+                    cpassword.setVisible(true);
+                    cpasswordField.setVisible(true);
+
+                }
+                else{
+                    password.setVisible(false);
+                    passwordField.setVisible(false);
+                    cpassword.setVisible(false);
+                    cpasswordField.setVisible(false);
+
+                }
+
+            }
+        }
+
+        //event listener for search button
+
         GetEmployeeInfo ge = new GetEmployeeInfo();
-Employee emp=new Employee();
         if (e.getSource() == searchbutton) {
+            Employee emp=new Employee();
             //setting fields to default value
             role.setSelectedIndex(-1);
             firstname.setText(" ");
@@ -2044,7 +2174,9 @@ Employee emp=new Employee();
             day.setSelectedIndex(-1);
             month.setSelectedIndex(-1);
             year.setSelectedIndex(-1);
-            String searchbox = search.getText();
+            String searchbox = search.getText().trim();
+
+
             System.out.println("the search box contains " + searchbox);
             if (isNumeric(searchbox)) {
                 try {
@@ -2053,18 +2185,31 @@ Employee emp=new Employee();
                     boolean success = ge.getEmployeeInfo(emp,id);
                  if(success) {
                      found.setText("found");
+                     foundId = Integer.parseInt(search.getText().trim());
+
+                         passwordField.setText(emp.password);
+                         cpasswordField.setText(emp.password);
+                    ageGet.setSelectedItem(String.valueOf(emp.age));
+
+
                      aeeditemployeebutton.setVisible(true);
+                     aeaddemployebutton.setVisible(false);
+
                      found.setForeground(Color.green);
 
                      firstname.setText(emp.firstName);
                      lastname.setText(emp.lastName);
-                     if(emp.gender == "MALE") {
-                         female.setSelected(false);
+                     if(emp.gender.equals( "MALE" ) ) {
+
+                         male.setSelected(true);
                      }
-                     else if(emp.gender == "FEMALE"){
+                     else if(emp.gender.equals( "FEMALE" ) ){
+
                          female.setSelected(true);
                      }
 
+
+System.out.println("searched gender is : " + emp.gender + "\nSelecton is : " + group.getSelection().getActionCommand());
                      String d,m,y;
                      emp.date.trim();
                      d = "" + emp.date.charAt(8) + "" + emp.date.charAt(9);
@@ -2072,12 +2217,14 @@ Employee emp=new Employee();
                      y = "" + emp.date.charAt(0) + "" + emp.date.charAt(1) + "" + emp.date.charAt(2) + "" + emp.date.charAt(3);
 
                      role.setSelectedItem(emp.position);
+                     ageGet.setSelectedItem(emp.age);
                      day.setSelectedItem(d);
                 month.setSelectedItem(m);
                 year.setSelectedItem(y);
                  }
                  else {
                      aeeditemployeebutton.setVisible(false);
+                     aeaddemployebutton.setVisible(true);
                      found.setText("not found");
                      found.setForeground(Color.red);
                      search.setText("");
@@ -2097,9 +2244,242 @@ Employee emp=new Employee();
                     found.setText(" ");
                     JOptionPane.showMessageDialog(null, "Please Enter correct \n Employee Id contains numbers only !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
+            }
+        }
+        //action listener for add new employee button
+        if(e.getSource() == aeaddemployebutton){
+            //1 Validation and Formating of the data
+            //2 Adding the validated record on to the data base
+            //3 Display the success of the process
+
+
+            boolean success = true;
+            if (firstname.getText().isEmpty() || lastname.getText().isEmpty() ) {
+                JOptionPane.showMessageDialog(null, "Empty text please Enter Employee Name !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            else if ( !isSlphabeticOnly( firstname.getText() ) || !isSlphabeticOnly( lastname.getText() ) ){
+                JOptionPane.showMessageDialog(null, "Please Enter a Valid Name \n Employee name contains words only !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            if(!male.isSelected() && !female.isSelected()){
+                JOptionPane.showMessageDialog(null, "Please Select Employee's Gender !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+           if(role.getSelectedItem() == null || role.getSelectedIndex() < 0){
+               JOptionPane.showMessageDialog(null, "Please Select Employee's Role !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+               success = false;
+            }
+            if(ageGet.getSelectedItem() == null || ageGet.getSelectedIndex() < 0){
+                JOptionPane.showMessageDialog(null, "Please Select Employee's Age !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            if(role.getSelectedItem().equals("Cashier") || role.getSelectedItem().equals("Manager"))
+            if( cpasswordField.getText().isEmpty() || passwordField.getText().isEmpty() ){
+                JOptionPane.showMessageDialog(null, "Password Can't Be Empty!!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            else if(passwordField.getText().length() < 5 || cpasswordField.getText().length() < 5){
+                JOptionPane.showMessageDialog(null, "Password Must Be At least five Characters !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            else  if(!passwordField.getText().equals(cpasswordField.getText())){
+                JOptionPane.showMessageDialog(null, "Passwords Don't Match.\n Enter password again !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                passwordField.setText("");
+                cpasswordField.setText("");
+                success = false;
+            }
+            //1.1 validation completed
+            //1.2 Formating
+
+            if(success){
+
+                /*
+                  pS.setString(1, c.firstName);
+            pS.setString(2, c.lastName);
+            pS.setInt(3, c.age);
+            pS.setString(4, c.contratType);
+            pS.setInt(5, c.roleId);
+                 */
+                Employee emp = new Employee();
+                emp.firstName = firstname.getText().trim();
+                emp.lastName = lastname.getText().trim();
+                if(female.isSelected())
+                    emp.gender = "FEMALE";
+                if(male.isSelected())
+                    emp.gender = "MALE";
+                emp.password = cpasswordField.getText().trim();
+                emp.age = Integer.parseInt((String) ageGet.getSelectedItem());
+                emp.contratType = "FULL TIME";
+                emp.firstName = emp.firstName.toUpperCase(Locale.ROOT);
+                emp.lastName = emp.lastName.toUpperCase(Locale.ROOT);
+                emp.date= (String) year.getSelectedItem() + (String) month.getSelectedItem() + (String) day.getSelectedItem();
+                emp.position = (String) role.getSelectedItem();
+                GetServices s = new GetServices();
+
+                try {
+                    emp.roleId = s.getServiceId((String) role.getSelectedItem());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                int choice = -1;
+                AddNewEmployee aE = new AddNewEmployee();
+                if(AddNewEmployee.isDuplicate(emp)) {
+
+                  choice = JOptionPane.showConfirmDialog(null,"There Is Identical Employee in the data base.  \nAdd Anyways.");
+                }
+                if(choice == 0 || choice == -1){
+                    try {
+                      int  input  = JOptionPane.showConfirmDialog(null,"Are you sure you want to add Employee?");
+                      if(input == 0) {
+                          aE.addEmployee(emp);
+                          JOptionPane.showMessageDialog(null, "Added Employee " + emp.firstName + " " + emp.lastName + "\nAs a " + emp.position, "Add Successful", JOptionPane.INFORMATION_MESSAGE);
+                          firstname.setText("");
+                          lastname.setText("");
+                          passwordField.setText("");
+                          cpasswordField.setText("");
+                          role.setSelectedIndex(-1);
+                          ageGet.setSelectedIndex(-1);
+                          day.setSelectedIndex(-1);
+                          year.setSelectedIndex(-1);
+                          month.setSelectedIndex(-1);
+                        }
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Adding Employee was not successfull !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    }}
+                else if(choice == 1 || choice == 2){
+                    firstname.setText("");
+                    lastname.setText("");
+                    passwordField.setText("");
+                    cpasswordField.setText("");
+                    role.setSelectedIndex(-1);
+                    ageGet.setSelectedIndex(-1);
+                    day.setSelectedIndex(-1);
+                    year.setSelectedIndex(-1);
+                    month.setSelectedIndex(-1);
+                }
+
+                System.out.println("Date is : " + emp.date);
+                System.out.println("Role is : " + emp.roleId);
+              }
+
 
         }
+        // edit employee part
+        if(e.getSource() == aeeditemployeebutton){
+            //1 Validation and Formating of the data
+            //2 Adding the validated record on to the data base
+            //3 Display the success of the process
 
+
+            boolean success = true;
+            if (firstname.getText().isEmpty() || lastname.getText().isEmpty() ) {
+                JOptionPane.showMessageDialog(null, "Empty text please Enter Employee Name !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            else if ( !isSlphabeticOnly( firstname.getText() ) || !isSlphabeticOnly( lastname.getText() ) ){
+                JOptionPane.showMessageDialog(null, "Please Enter a Valid Name \n Employee name contains words only !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            if(!male.isSelected() && !female.isSelected()){
+                JOptionPane.showMessageDialog(null, "Please Select Employee's Gender !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            if(role.getSelectedItem() == null || role.getSelectedIndex() < 0){
+                JOptionPane.showMessageDialog(null, "Please Select Employee's Role !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            if(ageGet.getSelectedItem() == null || ageGet.getSelectedIndex() < 0){
+                JOptionPane.showMessageDialog(null, "Please Select Employee's Age !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                success = false;
+            }
+            if(role.getSelectedItem().equals("Cashier") || role.getSelectedItem().equals("Manager"))
+                if( cpasswordField.getText().isEmpty() || passwordField.getText().isEmpty() ){
+                    JOptionPane.showMessageDialog(null, "Password Can't Be Empty!!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    success = false;
+                }
+                else if(passwordField.getText().length() < 5 || cpasswordField.getText().length() < 5){
+                    JOptionPane.showMessageDialog(null, "Password Must Be At least five Characters !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    success = false;
+                }
+                else  if(!passwordField.getText().equals(cpasswordField.getText())){
+                    JOptionPane.showMessageDialog(null, "Passwords Don't Match.\n Enter password again !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    passwordField.setText("");
+                    cpasswordField.setText("");
+                    success = false;
+                }
+            //1.1 validation completed
+            //1.2 Formating
+
+            if(success){
+
+
+                Employee emp = new Employee();
+                emp.id = foundId;
+                emp.firstName = firstname.getText().trim();
+                emp.lastName = lastname.getText().trim();
+                if(female.isSelected())
+                    emp.gender = "FEMALE";
+                if(male.isSelected())
+                    emp.gender = "MALE";
+                emp.password = cpasswordField.getText().trim();
+                emp.age = Integer.parseInt((String) ageGet.getSelectedItem());
+                emp.contratType = "FULL TIME";
+                emp.firstName = emp.firstName.toUpperCase(Locale.ROOT);
+                emp.lastName = emp.lastName.toUpperCase(Locale.ROOT);
+                emp.date= (String) year.getSelectedItem() + (String) month.getSelectedItem() + (String) day.getSelectedItem();
+                emp.position = (String) role.getSelectedItem();
+                GetServices s = new GetServices();
+
+                try {
+                    emp.roleId = s.getServiceId((String) role.getSelectedItem());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                int choice = -1;
+              UpdateEmployee uE = new UpdateEmployee();
+                if(AddNewEmployee.isDuplicate(emp)) {
+
+                    choice = JOptionPane.showConfirmDialog(null,"There Is Identical Employee in the data base.  \nAdd Anyways.");
+                }
+                if(choice == 0 || choice == -1){
+                    try {
+                        int  input  = JOptionPane.showConfirmDialog(null,"Are you sure you want to Edit Employee?");
+                        if(input == 0) {
+                            uE.updateEmployee(emp);
+                            JOptionPane.showMessageDialog(null, "Edited Employee " + emp.firstName + " " + emp.lastName + "\nAs a " + emp.position, "Add Successful", JOptionPane.INFORMATION_MESSAGE);
+                            firstname.setText("");
+                            lastname.setText("");
+                            passwordField.setText("");
+                            cpasswordField.setText("");
+                            role.setSelectedIndex(-1);
+                            ageGet.setSelectedIndex(-1);
+                            day.setSelectedIndex(-1);
+                            year.setSelectedIndex(-1);
+                            month.setSelectedIndex(-1);
+                        }
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Adding Employee was not successfull !!!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    }}
+                else if(choice == 1 || choice == 2){
+                    firstname.setText("");
+                    lastname.setText("");
+                    passwordField.setText("");
+                    cpasswordField.setText("");
+                    role.setSelectedIndex(-1);
+                    ageGet.setSelectedIndex(-1);
+                    day.setSelectedIndex(-1);
+                    year.setSelectedIndex(-1);
+                    month.setSelectedIndex(-1);
+                }
+
+                System.out.println("Date is : " + emp.date);
+                System.out.println("Role is : " + emp.roleId);
+            }
 
 
         }
