@@ -26,7 +26,7 @@ public class AddNewOrder {
             System.out.println("connected to the data base : " + addConn.getCatalog());
             //getting customer data from getCustomer function
 
-            String add_query = "INSERT INTO S_order" + "  ( serviceid, quantity, employeeid ) VALUES " + " ( ?, ?, ? );";
+            String add_query = "INSERT INTO S_order ( serviceid, quantity, employeeid ) VALUES " + " ( ?, ?, ? );";
 
     statement = addConn.createStatement();
     pS = addConn.prepareStatement(add_query);

@@ -4,6 +4,8 @@ import EMPLOYEE.AddNewEmployee;
 import EMPLOYEE.Employee;
 import EMPLOYEE.GetEmployeeInfo;
 import EMPLOYEE.UpdateEmployee;
+import Functionalities.Functions;
+import Functionalities.GetFunctionalities;
 import Order.*;
 import ROLE.GetRole;
 import SERVICE.GetServices;
@@ -36,10 +38,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
+import static javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS;
+
 public class P extends JFrame implements ActionListener,MouseListener{
     private static int foundId = 0;
-    double fp = 0, drp = 0, cp = 0, dep = 0;
-    static int id,tOrders;
+    private static double fp = 0, drp = 0, cp = 0, dep = 0;
+    private static int id,tOrders, totalOrders;
+    private static double totRevenue;
+    private static String topCashier, topOrder;
+
+
     JLayeredPane layer=new JLayeredPane();
 
     JPanel sidepanel=new JPanel();
@@ -74,6 +82,8 @@ public class P extends JFrame implements ActionListener,MouseListener{
     JLabel esmallgender=new JLabel();
     JLabel esmallage=new JLabel();
     JLabel esmallrole=new JLabel();
+    JLabel salary=new JLabel();
+    JLabel dateOfEmp=new JLabel();
 
     JLabel orderrecordtitle=new JLabel();
     JLabel usertotalrevenue=new JLabel();
@@ -664,29 +674,44 @@ System.out.println(id + "is the id from the constructor");
 
 
 
-        esmallname.setText("Name");
+        esmallname.setText("Id");
         esmallname.setForeground(Color.white);
         esmallname.setFont(new Font(null,Font.PLAIN,13));
-        esmallname.setBounds(432,202,250,13);
+        esmallname.setBounds(432,220,50,13);
         esmallname.setVisible(false);
 
-        esmallgender.setText("Gender");
+        esmallgender.setText("First Name");
         esmallgender.setForeground(Color.white);
         esmallgender.setFont(new Font(null,Font.PLAIN,13));
-        esmallgender.setBounds(587,202,250,13);
+        esmallgender.setBounds(537,220,250,13);
         esmallgender.setVisible(false);
 
-        esmallage.setText("Age");
+        esmallage.setText("Last Name");
         esmallage.setForeground(Color.white);
         esmallage.setFont(new Font(null,Font.PLAIN,13));
-        esmallage.setBounds(745,202,250,13);
+        esmallage.setBounds(642,220,250,13);
         esmallage.setVisible(false);
 
         esmallrole.setText("Role");
         esmallrole.setForeground(Color.white);
         esmallrole.setFont(new Font(null,Font.PLAIN,13));
-        esmallrole.setBounds(900,202,250,13);
+        esmallrole.setBounds(750,220,250,13);
         esmallrole.setVisible(false);
+
+        salary.setText("Salary");
+        salary.setForeground(Color.white);
+        salary.setFont(new Font(null,Font.PLAIN,13));
+        salary.setBounds(850,220,250,13);
+        salary.setVisible(false);
+
+
+        dateOfEmp.setText("Employment Date");
+        dateOfEmp.setForeground(Color.white);
+        dateOfEmp.setFont(new Font(null,Font.PLAIN,13));
+        dateOfEmp.setBounds(950,220,250,13);
+        dateOfEmp.setVisible(false);
+
+
 
         aeaddemployebutton.setBounds(459,679,165,47);
         aeaddemployebutton.setForeground(lightred);
@@ -918,7 +943,7 @@ System.out.println(id + "is the id from the constructor");
         contratlable.setFont(new Font(null,Font.BOLD,34));
         contratlable.setBounds(640,512,300,40);
 
-        usertotalorder.setText("500");
+        usertotalorder.setText(String.valueOf(totalOrders));
         usertotalorder.setForeground(Color.white);
         usertotalorder.setFont(new Font(null,Font.BOLD,27));
         usertotalorder.setBounds(489,172,300,27);
@@ -930,7 +955,7 @@ System.out.println(id + "is the id from the constructor");
         totalorder.setBounds(489,218,250,13);
         totalorder.setVisible(false);
 
-        usertotalrevenue.setText("$20,000");
+        usertotalrevenue.setText(String.valueOf(totRevenue));
         usertotalrevenue.setForeground(Color.white);
         usertotalrevenue.setFont(new Font(null,Font.BOLD,27));
         usertotalrevenue.setBounds(158,172,300,27);
@@ -942,10 +967,10 @@ System.out.println(id + "is the id from the constructor");
         totalrevenue.setBounds(158,218,250,13);
         totalrevenue.setVisible(false);
 
-        usertoporder.setText("Tibs");
+        usertoporder.setText(topOrder);
         usertoporder.setForeground(Color.white);
         usertoporder.setFont(new Font(null,Font.BOLD,27));
-        usertoporder.setBounds(793,172,300,27);
+        usertoporder.setBounds(793,172,300,30);
         usertoporder.setVisible(false);
 
         toporder.setText("Top Orders");
@@ -954,22 +979,24 @@ System.out.println(id + "is the id from the constructor");
         toporder.setBounds(793,218,250,13);
         toporder.setVisible(false);
 
-        useraddstotalrevenue.setText("1,000,000");
+
         useraddstotalrevenue.setForeground(Color.white);
+        useraddstotalrevenue.setText(topCashier);
         useraddstotalrevenue.setFont(new Font(null,Font.BOLD,27));
-        useraddstotalrevenue.setBounds(151,234,300,27);
+        useraddstotalrevenue.setBounds(145,240,300,27);
         useraddstotalrevenue.setVisible(false);
 
-        addstotalevenue.setText("Total Revenue");
+        addstotalevenue.setText("Top Cashier");
         addstotalevenue.setForeground(lightgray);
         addstotalevenue.setFont(new Font(null,Font.BOLD,13));
-        addstotalevenue.setBounds(151,268,300,27);
+        addstotalevenue.setBounds(145,274,300,27);
         addstotalevenue.setVisible(false);
 
 
         useraddstotalorder.setForeground(Color.white);
         useraddstotalorder.setFont(new Font(null,Font.BOLD,27));
         useraddstotalorder.setBounds(469,234,300,27);
+        useraddstotalorder.setText(String.valueOf(tOrders));
         useraddstotalorder.setVisible(false);
 
         addstotalorder.setText("Total Order");
@@ -1246,8 +1273,10 @@ System.out.println(id + "is the id from the constructor");
         employeetable.setForeground(lightgray);
         employeetable.setFont(new Font(null,Font.BOLD,13));
         employeetable.setBackground(darkblue);
-        employeetable.setRowHeight(50);
+        employeetable.setRowHeight(60);
         employeetable.setShowGrid(false);
+        employeetable.setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
+        employeetable.setRowSelectionAllowed(true);
         employeetable.setBorder(BorderFactory.createEmptyBorder());
         employeetable.setEnabled(false);
 
@@ -1391,6 +1420,8 @@ System.out.println(id + "is the id from the constructor");
         layer.add(aeeditemployeebutton);
         layer.add(aeaddemployebutton);
         layer.add(esmallrole);
+        layer.add(dateOfEmp);
+        layer.add(salary);
         layer.add(esmallage);
         layer.add(esmallgender);
         layer.add(esmallname);
@@ -1705,6 +1736,9 @@ private double getPrice(Service[] s,String name){
             esmallgender.setVisible(x);
             esmallage.setVisible(x);
             esmallrole.setVisible(x);
+            dateOfEmp.setVisible(x);
+            salary.setVisible(x);
+
             employeescrollpanel.setVisible(x);
 
             eaddedit.setVisible(!x);
@@ -1745,6 +1779,8 @@ private double getPrice(Service[] s,String name){
             esmallgender.setVisible(x);
             esmallage.setVisible(x);
             esmallrole.setVisible(x);
+            dateOfEmp.setVisible(x);
+            salary.setVisible(x);
             employeescrollpanel.setVisible(x);
             listemployeebutton.setContentAreaFilled(x);
         }
@@ -1754,6 +1790,8 @@ private double getPrice(Service[] s,String name){
             esmallgender.setVisible(x);
             esmallage.setVisible(x);
             esmallrole.setVisible(x);
+            dateOfEmp.setVisible(x);
+            salary.setVisible(x);
             employeescrollpanel.setVisible(x);
             esvisible(!x);
         }
@@ -1911,6 +1949,20 @@ private double getPrice(Service[] s,String name){
 
     @Override
     public  void actionPerformed(ActionEvent e) {
+
+        {
+            GetFunctionalities gf = new GetFunctionalities();
+            Functions f = null;
+            try {
+               f = gf.getFunc();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            totRevenue = f.totRevenue;
+            topCashier = f.topCashier;
+            topOrder = f.topOrder;
+            totalOrders = f.totalOrders;
+        }
         // TODO Auto-generated method stub
         GetServices gServices = new GetServices();
         try {
@@ -1919,13 +1971,17 @@ private double getPrice(Service[] s,String name){
                 Pr();
             }
             if (e.getSource() == orderbutton) {
-                orderrecordscreen();
+                super.dispose();
+                new P(id).orderrecordscreen();
+
             }
             if (e.getSource() == addbutton) {
+
                     addorderscreen();
             }
             if (e.getSource() == employeebutton) {
-                    Employee emp ;
+
+                Employee emp ;
                     GetEmployeeInfo eI = new GetEmployeeInfo();
 
                     emp = eI.getEmployeeInfo(id);
@@ -2023,9 +2079,12 @@ private double getPrice(Service[] s,String name){
 
 
             if (e.getSource() == addemployebutton) {
+
                 employeescreen();
             }
             if (e.getSource() == listemployeebutton) {
+
+
                 employeescreen2();
             }
             if (e.getSource() == removebutton1) {
@@ -2067,7 +2126,7 @@ private double getPrice(Service[] s,String name){
                 o.employeeId = id;
                 AddNewOrder addorder = new AddNewOrder();
                 boolean success = true;
-                if (food.isVisible()) {
+                if (choice1.isVisible()) {
 
                     System.out.println(id + " Is the id from visible food");
 
@@ -2077,7 +2136,7 @@ private double getPrice(Service[] s,String name){
 
                     tOrders += 1;
                 }
-                if (coffe.isVisible()) {
+                if (choice2.isVisible()) {
                     System.out.println(id + " Is the id from visible coffe");
 
 
@@ -2087,7 +2146,7 @@ private double getPrice(Service[] s,String name){
 
                     tOrders += 1;
                 }
-                if (drinks.isVisible()) {
+                if (choice3.isVisible()) {
 
                     o.quantity = Integer.parseInt(quantity3.getText());
                     getserviceId(o, s.drinks, (String) drinks.getSelectedItem());
@@ -2096,7 +2155,7 @@ private double getPrice(Service[] s,String name){
 
                     tOrders += 1;
                 }
-                if (disert.isVisible()) {
+                if (choice4.isVisible()) {
                     System.out.println(id + " Is the id from visible disert");
 
                     o.quantity = Integer.parseInt(quantity4.getText());
@@ -2360,7 +2419,12 @@ System.out.println("searched gender is : " + emp.gender + "\nSelecton is : " + g
                     year.setSelectedIndex(-1);
                     month.setSelectedIndex(-1);
                 }
-
+                super.dispose();
+                try {
+                    new P(id).employeescreen();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 System.out.println("Date is : " + emp.date);
                 System.out.println("Role is : " + emp.roleId);
               }
@@ -2477,6 +2541,12 @@ System.out.println("searched gender is : " + emp.gender + "\nSelecton is : " + g
                     month.setSelectedIndex(-1);
                 }
 
+                super.dispose();
+                try {
+                    new P(id).employeescreen();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 System.out.println("Date is : " + emp.date);
                 System.out.println("Role is : " + emp.roleId);
             }
